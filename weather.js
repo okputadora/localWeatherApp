@@ -4,7 +4,6 @@ var lat = 0;
 var lon = 0;
 var unitType = "imperial";
 var icon = "";
-console.log("Working...");
 
 var getWeather = function(data){
   $("#location").text(data.name + ", " + data.sys.country);
@@ -13,7 +12,7 @@ var getWeather = function(data){
   $("#weather").text(data.weather[0].description);
 
   if (unitType == "imperial"){
-    $("#units").text("  ℉");
+    $("#units").text("℉");
   }
   else {$("#units").text(" ℃")};
 
@@ -21,7 +20,6 @@ var getWeather = function(data){
 };
   //get users location
   if (navigator.geolocation){
-    console.log("in if statement");
     navigator.geolocation.getCurrentPosition(function(position){
       lat = position.coords.latitude;
       lon = position.coords.longitude;
@@ -31,8 +29,15 @@ var getWeather = function(data){
 
       //This won't work from a local file i.e. file:/// needs to be a live wp
       $.getJSON(url, getWeather)
+      $("#units").click(function(){
+        if (unitType === "imperial"){
+          unitType = "metric";
+        }
+        else {unitType = "imperial"};
+        url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon +
+                  "&units=" + unitType + "&appid=" + apiKey;
+        $.getJSON(url, getWeather);
+      });
     });
   }
-
-
 });
